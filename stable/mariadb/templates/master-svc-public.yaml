@@ -1,0 +1,24 @@
+{{- if .Values.service.publicip.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ template "mariadb.fullname" . }}-public"
+  labels:
+    app: "{{ template "mariadb.name" . }}"
+    component: "master"
+    chart: {{ template "mariadb.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+  annotations:
+    service.kubernetes.io/ibm-load-balancer-cloud-provider-ip-type: public
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: mysql
+    port: {{ .Values.service.port }}
+    targetPort: mysql
+  selector:
+    app: "{{ template "mariadb.name" . }}"
+    component: "master"
+    release: "{{ .Release.Name }}"
+{{- end }}

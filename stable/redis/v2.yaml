@@ -1,0 +1,68 @@
+slave:
+  disableCommands: FLUSHDB, FLUSHALL
+  service:
+    annotations:
+      service.kubernetes.io/ibm-load-balancer-cloud-provider-ip-type: public
+    type: LoadBalancer
+  extraFlags: ''
+  resources:
+    request:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 400Mi
+      cpu: 200m
+  affinity: {
+    }
+image:
+  tag: 4.0.9
+cluster:
+  slaveCount: 2
+  enabled: true
+usePassword: true
+networkPolicy:
+  allowExternal: false
+  enabled: false
+metrics:
+  podLabels: {
+    }
+  service:
+    annotations:
+      prometheus.io/port: '9121'
+      prometheus.io/scrape: 'true'
+    type: ClusterIP
+  podAnnotations: {
+    }
+  enabled: true
+master:
+  args: {
+    }
+  disableCommands: FLUSHDB, FLUSHALL
+  podLabels:
+    billingType: hourly
+  port: 6379
+  service:
+    annotations:
+      service.kubernetes.io/ibm-load-balancer-cloud-provider-ip-type: public
+    type: LoadBalancer
+  extraFlags: ''
+  persistence:
+    path: /bitnami
+    storageClass: ibmc-block-silver
+    size: 20Gi
+    accessModes:
+    - ReadWriteOnce
+    enabled: true
+  resources:
+    request:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 400Mi
+      cpu: 200m
+  securityContext:
+    runAsUser: '1001'
+    fsGroup: '1001'
+    enabled: true
+  podAnnotations: {
+    }

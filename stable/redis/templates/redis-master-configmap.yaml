@@ -1,0 +1,14 @@
+{{- if .Values.master.config }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "redis.fullname" . }}-redis-config
+  labels:
+    app: {{ template "redis.name" . }}
+    chart: {{ template "redis.chart" . }}
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  redis-config: |-
+{{ .Values.master.config | indent 4 }}
+{{- end -}}

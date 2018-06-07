@@ -1,0 +1,91 @@
+cluster:
+  enabled: true
+  slaveCount: 2
+image:
+  pullPolicy: Always
+  registry: docker.io
+  repository: bitnami/redis
+  tag: 4.0.9
+master:
+  args: {}
+  disableCommands: FLUSHDB, FLUSHALL
+  extraFlags: ""
+  livenessProbe:
+    enabled: true
+    failureThreshold: 5
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  persistence:
+    accessModes:
+    - ReadWriteOnce
+    enabled: true
+    path: /bitnami
+    size: 20Gi
+    storageClass: ibmc-block-silver
+    subPath: ""
+  podAnnotations: {}
+  podLabels:
+    billingType: hourly
+  port: 6379
+  readinessProbe:
+    enabled: true
+    failureThreshold: 5
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  resources:
+    limits:
+      cpu: 200m
+      memory: 400Mi
+    request:
+      cpu: 100m
+      memory: 256Mi
+  securityContext:
+    enabled: true
+    fsGroup: "1001"
+    runAsUser: "1001"
+  service:
+    annotations:
+      service.kubernetes.io/ibm-load-balancer-cloud-provider-ip-type: public
+    loadBalancerIP: null
+    type: LoadBalancer
+metrics:
+  enabled: true
+  image:
+    pullPolicy: IfNotPresent
+    registry: docker.io
+    repository: oliver006/redis_exporter
+    tag: v0.11
+  podAnnotations: {}
+  podLabels: {}
+  service:
+    annotations:
+      prometheus.io/port: "9121"
+      prometheus.io/scrape: "true"
+    loadBalancerIP: null
+    type: ClusterIP
+networkPolicy:
+  allowExternal: false
+  enabled: false
+password: null
+persistence: {}
+slave:
+  affinity: {}
+  disableCommands: FLUSHDB, FLUSHALL
+  extraFlags: ""
+  resources:
+    limits:
+      cpu: 200m
+      memory: 400Mi
+    request:
+      cpu: 100m
+      memory: 256Mi
+  service:
+    annotations:
+      service.kubernetes.io/ibm-load-balancer-cloud-provider-ip-type: public
+    loadBalancerIP: null
+    type: LoadBalancer
+usePassword: true
